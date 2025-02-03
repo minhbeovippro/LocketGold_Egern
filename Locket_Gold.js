@@ -19,7 +19,7 @@ let jsonToUpdate = {
         "subscriber": {
             "entitlement": {},
             "first_seen": "2025-02-03T01:01:01Z",
-            "original_application_version": "1.94.0",
+            "original_application_version": "1.100.0",
             "last_seen": "2025-02-03T01:01:01Z",
             "other_purchases": {},
             "management_url": null,
@@ -42,7 +42,7 @@ for (const [entitlementId, productInfo] of Object.entries(productEntitlementMapp
     jsonToUpdate.subscriber.entitlements[entitlement] = {
       "purchase_date": "2025-02-03T01:01:01Z",
       "original_purchase_date": "2025-02-03T01:01:01Z",
-      "expires_date": "9692-01-01T01:01:01Z",
+      "expires_date": "2099-01-01T01:01:01Z",
       "is_sandbox" : false,
       "ownership_type": "PURCHASED",
       "store": "app_store",
