@@ -1,47 +1,48 @@
-var request = $request;
+var req = $request;
 
-const options = {
+const joinDate = "2025-02-03T01:01:01Z";
+const expireDate = "2099-01-01T01:01:01Z";
+
+const opt = {
     url: "https://api.revenuecat.com/v1/product_entitlement_mapping",
     headers: {
-        'Authorization': request.headers["authorization"],
+        'Authorization': req.headers["authorization"],
         'X-Platform': 'iOS',
-        'User-Agent': request.headers["user-agent"]
+        'User-Agent': req.headers["user-agent"]
     }
 };
 
-$httpClient.get(options, function(error, newResponse, data) {
+$httpClient.get(opt, (err, res, data) => {
     const ent = JSON.parse(data);
-
-    let jsonToUpdate = {
+    let json = {
         "request_date_ms": 1704070861000,
-        "request_date": "2025-02-03T01:01:01Z",
+        "request_date": joinDate,
         "subscriber": {
-            "first_seen": "2025-02-03T01:01:01Z",
+            "first_seen": joinDate,
             "original_application_version": "1.100.0",
-            "last_seen": "2025-02-03T01:01:01Z",
-            "original_purchase_date": "2025-02-03T01:01:01Z",
+            "last_seen": joinDate,
+            "original_purchase_date": joinDate,
             "original_app_user_id": "70B24288-83C4-4035-B001-572285B21AE1",
             "entitlements": {},
             "subscriptions": {}
         }
     };
 
-    Object.entries(ent.product_entitlement_mapping).forEach(([entitlementId, { product_identifier, entitlements }]) => {
-        entitlements.forEach(entitlement => {
-            const commonData = {
-                "purchase_date": "2025-02-03T01:01:01Z",
-                "original_purchase_date": "2025-02-03T01:01:01Z",
-                "expires_date": "2099-01-01T01:01:01Z",
+    Object.entries(ent.product_entitlement_mapping).forEach(([id, { product_identifier, entitlements }]) => {
+        entitlements.forEach(ent => {
+            let data = {
+                "purchase_date": joinDate,
+                "original_purchase_date": joinDate,
+                "expires_date": expireDate,
                 "is_sandbox": false,
                 "ownership_type": "PURCHASED",
                 "store": "app_store",
                 "product_identifier": product_identifier
             };
-
-            jsonToUpdate.subscriber.entitlements[entitlement] = commonData;
-            jsonToUpdate.subscriber.subscriptions[product_identifier] = { ...commonData, "purchase_date": "2025-02-03T01:01:01Z" };
+            json.subscriber.entitlements[ent] = data;
+            json.subscriber.subscriptions[product_identifier] = { ...data };
         });
     });
 
-    $done({body: JSON.stringify(jsonToUpdate)});
+    $done({ body: JSON.stringify(json) });
 });
